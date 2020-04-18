@@ -1,0 +1,91 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://assets/over.png" type="Texture" id=1]
+[ext_resource path="res://assets/under.png" type="Texture" id=2]
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Node2D
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+"
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends TextureProgress
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	connect(\"caught_food\", get_node(\"Level\"), \"_on_Food_caught_food\")
+
+func _update_value(val):
+	var current_value = get_value()
+	print(current_value)
+	set_value(val)
+
+func _on_Food_caught_food():
+	print(\"caught food\")
+"
+
+[node name="Overlay" type="Node2D"]
+script = SubResource( 2 )
+
+[node name="TileMap" type="TileMap" parent="."]
+cell_size = Vector2( 16, 16 )
+format = 1
+
+[node name="Control" type="Control" parent="."]
+margin_left = 6.79425
+margin_top = 5.50006
+margin_right = 225.794
+margin_bottom = 124.5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel" type="Label" parent="Control"]
+margin_left = 10.0
+margin_top = 5.0
+margin_right = 210.0
+margin_bottom = 18.0
+text = "regnuH"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HungerMeter" type="TextureProgress" parent="Control"]
+margin_left = 10.0
+margin_top = 24.0
+margin_right = 210.0
+margin_bottom = 34.0
+value = 50.0
+texture_under = ExtResource( 2 )
+texture_progress = ExtResource( 1 )
+fill_mode = 1
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
