@@ -21,7 +21,6 @@ func _process(delta):
 
 
 func _on_Food_body_entered(body):
-	print(body.get_name())
 	if body.get_name() == "Player":
 		emit_signal("caught_food")
 	if body.get_name() == "Floor":
