@@ -6,6 +6,8 @@ extends Area2D
 # var b = "text"
 const GRAVITY = 50
 var velocity = Vector2()
+signal caught_food
+signal missed_food
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -21,8 +23,8 @@ func _process(delta):
 func _on_Food_body_entered(body):
 	print(body.get_name())
 	if body.get_name() == "Player":
-		print("scored")
+		emit_signal("caught_food")
 	if body.get_name() == "Floor":
-		print("hit floor")
+		emit_signal("missed_food")
 	
 	queue_free()
