@@ -32,10 +32,16 @@ func _physics_process(delta):
 		elif velocity.x > 0:
 			animationPlayer.play("walk_right")
 	elif Input.is_action_pressed("ui_left") and is_on_floor():
-		velocity.x = -walk_speed
+		var speed = walk_speed
+		if Input.is_action_pressed("run_modify"):
+			speed += 50
+		velocity.x = -speed
 		animationPlayer.play("walk_left")
 	elif Input.is_action_pressed("ui_right") and is_on_floor():
-		velocity.x =  walk_speed
+		var speed = walk_speed
+		if Input.is_action_pressed("run_modify"):
+			speed += 50
+		velocity.x = speed
 		animationPlayer.play("walk_right")
 	elif is_on_floor():
 		velocity.x = 0
