@@ -7,7 +7,9 @@ extends KinematicBody2D
 const GRAVITY = 200.0
 export var walk_speed: float = 200.0
 
-export var jump_velocity: float = 150.0
+export var jump_velocity: float = 170.0
+
+export var run_modifier: float = 75.0
 
 var velocity = Vector2()
 onready var animationPlayer = $AnimationPlayer
@@ -34,13 +36,13 @@ func _physics_process(delta):
 	elif Input.is_action_pressed("ui_left") and is_on_floor():
 		var speed = walk_speed
 		if Input.is_action_pressed("run_modify"):
-			speed += 50
+			speed += run_modifier
 		velocity.x = -speed
 		animationPlayer.play("walk_left")
 	elif Input.is_action_pressed("ui_right") and is_on_floor():
 		var speed = walk_speed
 		if Input.is_action_pressed("run_modify"):
-			speed += 50
+			speed += run_modifier
 		velocity.x = speed
 		animationPlayer.play("walk_right")
 	elif is_on_floor():

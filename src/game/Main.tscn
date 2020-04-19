@@ -3,4 +3,5 @@
 [ext_resource path="res://src/game/Main.gd" type="Script" id=3]
 
 [node name="Main" type="Node2D"]
+pause_mode = 2
 script = ExtResource( 3 )
