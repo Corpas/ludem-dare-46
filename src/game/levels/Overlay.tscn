@@ -19,15 +19,7 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	connect(\"caught_food\", get_node(\"Level\"), \"_on_Food_caught_food\")
-
-func _update_value(val):
-	var current_value = get_value()
-	print(current_value)
-	set_value(val)
-
-func _on_Food_caught_food():
-	print(\"caught food\")
+	pass
 "
 
 [node name="Overlay" type="Node2D"]
@@ -38,18 +30,18 @@ format = 1
 
 [node name="Control" type="Control" parent="."]
 margin_left = 6.79425
-margin_top = 5.50006
+margin_top = 6.14713
 margin_right = 225.794
-margin_bottom = 124.5
+margin_bottom = 125.147
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="RichTextLabel" type="Label" parent="Control"]
 margin_left = 10.0
-margin_top = 5.0
+margin_top = 4.67647
 margin_right = 210.0
-margin_bottom = 18.0
+margin_bottom = 18.6765
 text = "regnuH"
 align = 2
 __meta__ = {
@@ -66,6 +58,27 @@ texture_under = ExtResource( 2 )
 texture_progress = ExtResource( 1 )
 fill_mode = 1
 script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel2" type="Label" parent="Control"]
+margin_left = 10.0
+margin_top = 44.0
+margin_right = 210.0
+margin_bottom = 52.0
+text = "peelS"
+align = 2
+
+[node name="SleepMeter" type="TextureProgress" parent="Control"]
+margin_left = 10.0
+margin_top = 64.0
+margin_right = 210.0
+margin_bottom = 74.0
+value = 50.0
+texture_under = ExtResource( 2 )
+texture_progress = ExtResource( 1 )
+fill_mode = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
