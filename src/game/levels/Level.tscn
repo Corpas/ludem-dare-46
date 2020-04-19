@@ -34,7 +34,7 @@ position = Vector2( 1034.43, 286.018 )
 shape = SubResource( 2 )
 
 [node name="Player" parent="." instance=ExtResource( 3 )]
-position = Vector2( 511.491, 546.196 )
+position = Vector2( 503.109, 544.998 )
 
 [node name="Overlay" parent="." instance=ExtResource( 2 )]
 position = Vector2( -9.5354, -2.90417 )

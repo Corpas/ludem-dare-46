@@ -10,6 +10,7 @@ var current_animation_player
 onready var level_scene = load("res://src/game/levels/Level.tscn")
 onready var hunger_script = load("res://src/game/levels/hunger/Hunger.gd")
 onready var sleep_script = load("res://src/game/levels/sleep/Sleep.gd")
+onready var stopped_script = load("res://src/game/levels/game-over/GameStopped.gd")
 onready var random = RandomNumberGenerator.new()
 onready var screen_size = get_viewport().get_visible_rect().size
 onready var bomb_scene = load("res://src/drops/enemy/Bomb.tscn")
@@ -24,51 +25,74 @@ const MAX_POINTS = 200
 const MAX_TIMER = 10
 
 var bomb_count = 0
-const MAX_BOMBS = 10
-var bomb_timer = 5
-const MAX_BOMB_TIME = 5
-var bombs = [] 
+const MAX_BOMBS = 8
+var bomb_timer = 3
+const MAX_BOMB_TIME = 3
+var bombs = []
+
+var paused = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	_start_game(stopped_script)
+	paused = true
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	if !paused:
+		timer += delta
+		
+		bomb_timer += delta
+		
+		if bomb_count < MAX_BOMBS and bomb_timer > MAX_BOMB_TIME:
+			# drop a bomb
+			random.randomize()
+			var bomb = bomb_scene.instance()
+			bomb.position.x = random.randf_range(0, screen_size.x)
+			bomb.position.y = -10
+			add_child(bomb)
+			bomb_count += 1
+			bomb_timer = 0
+			bombs.push_back(bomb)
+			bomb.connect("touched_bomb", self, "_on_touched_bomb")
+			bomb.connect("remove_bomb", self, "_on_remove_bomb")
+		
+		if timer > MAX_TIMER:
+			_drop_inactive_meters()
+			
+			timer = 0.0
+	else:
+		if Input.is_action_pressed("ui_accept"):
+			_remove_bombs()
+			_restart_game(hunger_script)
+
+func _on_remove_bomb(bomb):
+	print("removing bomb")
+	bomb_count -= 1
+	bombs.erase(bomb)
+
+func _remove_bombs():
+	for bomb in bombs:
+		remove_child(bomb)
+	bombs = []
+
+func _start_game(script):
+	timer = 0.0
+	paused = false
 	current_level = level_scene.instance()
-	current_level.set_script(hunger_script)
+	current_level.set_script(script)
 	current_level.connect("level_end", self, "_load_next_level")
 	add_child(current_level)
 	hunger_meter = get_node("Level/Overlay/Control/HungerMeter")
 	sleep_meter = get_node("Level/Overlay/Control/SleepMeter")
 	current_player = get_node("Level/Player")
 	current_animation_player = get_node("Level/Player/AnimationPlayer")
+	hunger_meter.set_value(50)
+	sleep_meter.set_value(50)
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	timer += delta
-	
-	bomb_timer += delta
-	
-	if bomb_count < MAX_BOMBS and bomb_timer > MAX_BOMB_TIME:
-		# drop a bomb
-		random.randomize()
-		var bomb = bomb_scene.instance()
-		bomb.position.x = random.randf_range(0, screen_size.x)
-		bomb.position.y = -10
-		add_child(bomb)
-		bombs.push_back(bomb)
-		bomb_count += 1
-		bomb_timer = 0
-		bomb.connect("touched_bomb", self, "_on_touched_bomb")
-	
-	if timer > MAX_TIMER:
-		if current_script == "hunger":
-			var current_sleep_value = sleep_meter.get_value()
-			sleep_meter.set_value(current_sleep_value - 10)
-		elif current_script == "sleep":
-			var current_hunger_value = hunger_meter.get_value()
-			hunger_meter.set_value(hunger_meter.get_value() - 10)
-		
-		timer = 0.0
-
+func _restart_game(script):
+	remove_child(current_level)
+	_start_game(script)
 
 func _load_next_level():
 	var hunger_value = hunger_meter.get_value()
@@ -79,24 +103,26 @@ func _load_next_level():
 	var has_available_level = _has_available_level()
 	
 	if has_available_level and hunger_value < 100:
-		print("creating hunger")
 		current_script = "hunger"
 		new_level.set_script(hunger_script)
 		_configure_new_level(new_level)
 	elif has_available_level and sleep_value < 100:
-		print("creating sleep")
 		current_script = "sleep"
 		new_level.set_script(sleep_script)
 		_configure_new_level(new_level)
 	else:
 		#check for win/lose
+		_restart_game(stopped_script)
+		paused = true
+		_remove_bombs()
+		
 		var total = hunger_value + sleep_value
 		if total == MAX_POINTS:
 			#win
-			print("You win")
+			pass
 		else:
 			#lose
-			print("You lose")
+			pass
 
 func _has_available_level():
 	var total_points = hunger_meter.get_value() + sleep_meter.get_value()
@@ -129,5 +155,31 @@ func _configure_new_level(new_level):
 	current_player.velocity.y = current_player_velocity.y
 
 func _on_touched_bomb(touched_bomb):
+	_drop_active_meter()
 	remove_child(touched_bomb)
 	bomb_count -= 1
+	var bomb_x = touched_bomb.position.x
+	var player_x = current_player.position.x
+	
+	var blow_back_direction = bomb_x - player_x
+	
+	if blow_back_direction < 0:
+		current_player.move_and_slide(Vector2(3000, -3000), Vector2(0, -1))
+	else:
+		current_player.move_and_slide(Vector2(-3000, -3000), Vector2(0, -1))
+
+func _drop_inactive_meters():
+	if current_script == "hunger":
+		var current_sleep_value = sleep_meter.get_value()
+		sleep_meter.set_value(current_sleep_value - 10)
+	elif current_script == "sleep":
+		var current_hunger_value = hunger_meter.get_value()
+		hunger_meter.set_value(hunger_meter.get_value() - 10)
+
+func _drop_active_meter():
+	if current_script == "sleep":
+		var current_sleep_value = sleep_meter.get_value()
+		sleep_meter.set_value(current_sleep_value - 10)
+	elif current_script == "hunger":
+		var current_hunger_value = hunger_meter.get_value()
+		hunger_meter.set_value(hunger_meter.get_value() - 10)
