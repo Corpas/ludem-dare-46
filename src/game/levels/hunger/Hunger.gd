@@ -11,6 +11,7 @@ onready var random = RandomNumberGenerator.new()
 onready var screen_size = get_viewport().get_visible_rect().size
 onready var hunger_meter = $Overlay/Control/HungerMeter
 onready var player = $Player
+onready var player_face = $AnimatedPlayer/Sprite
 var food
 var init = true
 
@@ -22,21 +23,24 @@ func _ready():
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
+# warning-ignore:unused_argument
 func _process(delta):
 	var hunger_value = hunger_meter.get_value()
+	if(hunger_value < 30):
+		player_face._set_worried_face()
 	if (hunger_value == 0 and init == false) or hunger_value == 100:
 		emit_signal("level_end")
 	elif !has_node("Pizza") and !has_node("Cherry") and !has_node("Banana"):
 		random.randomize()
 		var spawn_choice = random.randi()%3
-		
+
 		if spawn_choice == 0:
 			food = pizza_scene.instance()
 		elif spawn_choice == 1:
 			food = cherry_scene.instance()
 		else:
 			food = banana_scene.instance()
-		
+
 		food.position.x = random.randf_range(0, screen_size.x)
 		food.position.y = -10
 		add_child(food)
@@ -45,8 +49,10 @@ func _process(delta):
 
 func _on_caught_food():
 	init = false
+	player_face._set_happy_face()
 	hunger_meter.set_value(hunger_meter.get_value() + 10)
-	
+
 func _on_missed_food():
 	init = false
+	player_face._set_angry_face()
 	hunger_meter.set_value(hunger_meter.get_value() - 10)

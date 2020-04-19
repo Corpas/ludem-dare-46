@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://src/game/levels/hunger/Hunger.gd" type="Script" id=1]
 [ext_resource path="res://src/game/levels/Overlay.tscn" type="PackedScene" id=2]
 [ext_resource path="res://src/player/Player.tscn" type="PackedScene" id=3]
+[ext_resource path="res://src/game/levels/AnimatedPlayer.tscn" type="PackedScene" id=4]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 548.362, 10 )
@@ -32,6 +33,10 @@ shape = SubResource( 2 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Wall_Right"]
 position = Vector2( 1034.43, 286.018 )
 shape = SubResource( 2 )
+
+[node name="AnimatedPlayer" parent="." instance=ExtResource( 4 )]
+position = Vector2( 272.201, 107.676 )
+z_index = -1
 
 [node name="Player" parent="." instance=ExtResource( 3 )]
 position = Vector2( 503.109, 544.998 )
