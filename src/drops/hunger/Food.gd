@@ -19,7 +19,7 @@ func _process(delta):
 func _on_Food_body_entered(body):
 	if body.get_name() == "Player":
 		emit_signal("caught_food")
+		queue_free()
 	if body.get_name() == "Floor":
 		emit_signal("missed_food")
-	
-	queue_free()
+		queue_free()

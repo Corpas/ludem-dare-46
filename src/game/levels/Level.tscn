@@ -19,7 +19,7 @@ collision_layer = 2
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Floor"]
-position = Vector2( 513.094, 563.816 )
+position = Vector2( 510.699, 582.976 )
 shape = SubResource( 1 )
 
 [node name="Wall_Left" type="StaticBody2D" parent="."]
@@ -35,11 +35,11 @@ position = Vector2( 1034.43, 286.018 )
 shape = SubResource( 2 )
 
 [node name="AnimatedPlayer" parent="." instance=ExtResource( 4 )]
-position = Vector2( 272.201, 107.676 )
+position = Vector2( 271.158, 115.468 )
 z_index = -1
 
 [node name="Player" parent="." instance=ExtResource( 3 )]
-position = Vector2( 510.892, 525.24 )
+position = Vector2( 503.109, 544.998 )
 
 [node name="Overlay" parent="." instance=ExtResource( 2 )]
 position = Vector2( -9.5354, -2.90417 )

@@ -10,6 +10,7 @@ onready var banana_scene = load("res://src/drops/hunger/Banana.tscn")
 onready var random = RandomNumberGenerator.new()
 onready var screen_size = get_viewport().get_visible_rect().size
 onready var hunger_meter = $Overlay/Control/HungerMeter
+onready var player = $Player
 onready var player_face = $AnimatedPlayer/Sprite
 var food
 var init = true
@@ -18,7 +19,7 @@ signal level_end
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass
+	player.get_tree().paused = false
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

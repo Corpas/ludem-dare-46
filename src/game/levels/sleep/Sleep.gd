@@ -9,6 +9,7 @@ onready var bed_scene = load("res://src/drops/sleep/Bed.tscn")
 onready var screen_size = get_viewport().get_visible_rect().size
 onready var sleep_meter = $Overlay/Control/SleepMeter
 onready var random = RandomNumberGenerator.new()
+onready var player = $Player
 
 var init = true
 
@@ -16,7 +17,7 @@ signal level_end
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass
+	player.get_tree().paused = false
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
