@@ -10,6 +10,9 @@ var current_animation_player
 onready var level_scene = load("res://src/game/levels/Level.tscn")
 onready var hunger_script = load("res://src/game/levels/hunger/Hunger.gd")
 onready var sleep_script = load("res://src/game/levels/sleep/Sleep.gd")
+onready var random = RandomNumberGenerator.new()
+onready var screen_size = get_viewport().get_visible_rect().size
+onready var bomb_scene = load("res://src/drops/enemy/Bomb.tscn")
 
 var hunger_meter
 var sleep_meter
@@ -19,6 +22,12 @@ var timer = 0.0
 
 const MAX_POINTS = 200
 const MAX_TIMER = 10
+
+var bomb_count = 0
+const MAX_BOMBS = 10
+var bomb_timer = 5
+const MAX_BOMB_TIME = 5
+var bombs = [] 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -35,6 +44,20 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	timer += delta
+	
+	bomb_timer += delta
+	
+	if bomb_count < MAX_BOMBS and bomb_timer > MAX_BOMB_TIME:
+		# drop a bomb
+		random.randomize()
+		var bomb = bomb_scene.instance()
+		bomb.position.x = random.randf_range(0, screen_size.x)
+		bomb.position.y = -10
+		add_child(bomb)
+		bombs.push_back(bomb)
+		bomb_count += 1
+		bomb_timer = 0
+		bomb.connect("touched_bomb", self, "_on_touched_bomb")
 	
 	if timer > MAX_TIMER:
 		if current_script == "hunger":
@@ -104,3 +127,7 @@ func _configure_new_level(new_level):
 	current_player.position.y = current_player_pos.y
 	current_player.velocity.x = current_player_velocity.x
 	current_player.velocity.y = current_player_velocity.y
+
+func _on_touched_bomb(touched_bomb):
+	remove_child(touched_bomb)
+	bomb_count -= 1
