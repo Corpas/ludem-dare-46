@@ -10,6 +10,8 @@ onready var screen_size = get_viewport().get_visible_rect().size
 onready var sleep_meter = $Overlay/Control/SleepMeter
 onready var random = RandomNumberGenerator.new()
 
+var init = true
+
 signal level_end
 
 # Called when the node enters the scene tree for the first time.
@@ -22,7 +24,7 @@ func _process(delta):
 	var bed
 	
 	var sleep_value = sleep_meter.get_value()
-	if sleep_value == 0 or sleep_value == 100:
+	if (sleep_value == 0 and init == false) or sleep_value == 100:
 		emit_signal("level_end")
 	elif !has_node("Bed"):
 		random.randomize()
@@ -34,7 +36,9 @@ func _process(delta):
 		bed.connect("missed_bed", self, "_on_missed_bed")
 		
 func _on_caught_bed():
+	init = false
 	sleep_meter.set_value(sleep_meter.get_value() + 10)
 
 func _on_missed_bed():
+	init = false
 	sleep_meter.set_value(sleep_meter.get_value() - 10)
