@@ -1,9 +1,5 @@
 extends Area2D
 
-
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
 const GRAVITY = 50
 var velocity = Vector2()
 signal caught_food
