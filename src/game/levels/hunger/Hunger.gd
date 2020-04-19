@@ -11,6 +11,7 @@ onready var random = RandomNumberGenerator.new()
 onready var screen_size = get_viewport().get_visible_rect().size
 onready var hunger_meter = $Overlay/Control/HungerMeter
 var food
+var init = true
 
 signal level_end
 
@@ -22,7 +23,7 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	var hunger_value = hunger_meter.get_value()
-	if hunger_value == 100 or hunger_value == 0:
+	if (hunger_value == 0 and init == false) or hunger_value == 100:
 		emit_signal("level_end")
 	elif !has_node("Pizza") and !has_node("Cherry") and !has_node("Banana"):
 		random.randomize()
@@ -42,7 +43,9 @@ func _process(delta):
 		food.connect("missed_food", self, "_on_missed_food")
 
 func _on_caught_food():
+	init = false
 	hunger_meter.set_value(hunger_meter.get_value() + 10)
 	
 func _on_missed_food():
+	init = false
 	hunger_meter.set_value(hunger_meter.get_value() - 10)
