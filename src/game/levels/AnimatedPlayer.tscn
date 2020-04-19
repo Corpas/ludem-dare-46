@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://src/game/levels/animated-player/AnimatedPlayer.gd" type="Script" id=2]
+
+[node name="AnimatedPlayer" type="Node2D"]
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 226.436, 226.436 )
+scale = Vector2( 4.53807, 4.53807 )
+script = ExtResource( 2 )
