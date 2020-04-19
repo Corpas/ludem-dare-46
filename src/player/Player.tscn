@@ -59,7 +59,6 @@ tracks/0/keys = {
 
 [node name="Player" type="KinematicBody2D"]
 collision_mask = 2
-motion/sync_to_physics = true
 script = ExtResource( 2 )
 walk_speed = 150.0
 jump_velocity = 125.0

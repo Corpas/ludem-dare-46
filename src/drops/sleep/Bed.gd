@@ -1,13 +1,10 @@
 extends Area2D
 
-
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
 const GRAVITY = 50
 var velocity = Vector2()
-signal caught_food
-signal missed_food
+
+signal caught_bed
+signal missed_bed
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -19,12 +16,10 @@ func _process(delta):
 	velocity.y += GRAVITY * delta
 	position.y += velocity.y * delta
 
-
-func _on_Food_body_entered(body):
-	print(body.get_name())
+func _on_Bed_body_entered(body):
 	if body.get_name() == "Player":
-		emit_signal("caught_food")
+		emit_signal("caught_bed")
 	if body.get_name() == "Floor":
-		emit_signal("missed_food")
+		emit_signal("missed_bed")
 	
 	queue_free()
