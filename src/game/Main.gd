@@ -55,7 +55,6 @@ func _load_next_level():
 	
 	var has_available_level = _has_available_level()
 	
-	
 	if has_available_level and hunger_value < 100:
 		print("creating hunger")
 		current_script = "hunger"
@@ -67,7 +66,6 @@ func _load_next_level():
 		new_level.set_script(sleep_script)
 		_configure_new_level(new_level)
 	else:
-		print("in else for some reason")
 		#check for win/lose
 		var total = hunger_value + sleep_value
 		if total == MAX_POINTS:
@@ -91,7 +89,6 @@ func _configure_new_level(new_level):
 	var hunger_value = hunger_meter.get_value()
 	var sleep_value = sleep_meter.get_value()
 	
-	timer = 0.0
 	new_level.connect("level_end", self, "_load_next_level")
 	remove_child(current_level)
 	current_level = new_level
