@@ -18,7 +18,7 @@ var current_script = "hunger"
 var timer = 0.0
 
 const MAX_POINTS = 200
-const MAX_TIMER = 2
+const MAX_TIMER = 10
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
