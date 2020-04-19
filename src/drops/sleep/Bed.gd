@@ -19,7 +19,7 @@ func _process(delta):
 func _on_Bed_body_entered(body):
 	if body.get_name() == "Player":
 		emit_signal("caught_bed")
+		queue_free()
 	if body.get_name() == "Floor":
 		emit_signal("missed_bed")
-	
-	queue_free()
+		queue_free()
