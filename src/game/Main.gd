@@ -30,6 +30,8 @@ var bomb_timer = 3
 const MAX_BOMB_TIME = 3
 var bombs = []
 
+## 8 bombs - one every 3 sec - removed after 24 sec
+
 var paused = false
 
 # Called when the node enters the scene tree for the first time.
@@ -67,7 +69,6 @@ func _process(delta):
 			_restart_game(hunger_script)
 
 func _on_remove_bomb(bomb):
-	print("removing bomb")
 	bomb_count -= 1
 	bombs.erase(bomb)
 
@@ -75,14 +76,15 @@ func _remove_bombs():
 	for bomb in bombs:
 		remove_child(bomb)
 	bombs = []
+	bomb_count = 0
 
 func _start_game(script):
 	timer = 0.0
 	paused = false
 	current_level = level_scene.instance()
 	current_level.set_script(script)
-	current_level.connect("level_end", self, "_load_next_level")
 	add_child(current_level)
+	current_level.connect("level_end", self, "_load_next_level")
 	hunger_meter = get_node("Level/Overlay/Control/HungerMeter")
 	sleep_meter = get_node("Level/Overlay/Control/SleepMeter")
 	current_player = get_node("Level/Player")
@@ -158,6 +160,7 @@ func _on_touched_bomb(touched_bomb):
 	_drop_active_meter()
 	remove_child(touched_bomb)
 	bomb_count -= 1
+	bombs.erase(touched_bomb)
 	var bomb_x = touched_bomb.position.x
 	var player_x = current_player.position.x
 	
@@ -174,7 +177,7 @@ func _drop_inactive_meters():
 		sleep_meter.set_value(current_sleep_value - 10)
 	elif current_script == "sleep":
 		var current_hunger_value = hunger_meter.get_value()
-		hunger_meter.set_value(hunger_meter.get_value() - 10)
+		hunger_meter.set_value(current_hunger_value - 10)
 
 func _drop_active_meter():
 	if current_script == "sleep":
@@ -182,4 +185,4 @@ func _drop_active_meter():
 		sleep_meter.set_value(current_sleep_value - 10)
 	elif current_script == "hunger":
 		var current_hunger_value = hunger_meter.get_value()
-		hunger_meter.set_value(hunger_meter.get_value() - 10)
+		hunger_meter.set_value(current_hunger_value - 10)
