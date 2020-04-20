@@ -13,6 +13,7 @@ export var run_modifier: float = 75.0
 
 var velocity = Vector2()
 onready var animationPlayer = $AnimationPlayer
+onready var sprite = $Sprite
 
 
 # Called when the node enters the scene tree for the first time.
@@ -30,22 +31,27 @@ func _physics_process(delta):
 		velocity.y = 0
 		velocity.y -= jump_velocity
 		if velocity.x < 0:
-			animationPlayer.play("walk_left")
+			sprite.set_flip_h(true)
 		elif velocity.x > 0:
-			animationPlayer.play("walk_right")
-	elif Input.is_action_pressed("ui_left") and is_on_floor():
+			sprite.set_flip_h(false)
+		
+		animationPlayer.play("jump")
+	elif Input.is_action_pressed("ui_left"):
+		sprite.set_flip_h(false)
 		var speed = walk_speed
 		if Input.is_action_pressed("run_modify"):
 			speed += run_modifier
 		velocity.x = -speed
 		animationPlayer.play("walk_left")
-	elif Input.is_action_pressed("ui_right") and is_on_floor():
+	elif Input.is_action_pressed("ui_right"):
+		sprite.set_flip_h(false)
 		var speed = walk_speed
 		if Input.is_action_pressed("run_modify"):
 			speed += run_modifier
 		velocity.x = speed
 		animationPlayer.play("walk_right")
 	elif is_on_floor():
+		sprite.set_flip_h(false)
 		velocity.x = 0
 		animationPlayer.play("idle")
 	
