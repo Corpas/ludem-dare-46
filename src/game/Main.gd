@@ -30,6 +30,8 @@ var bomb_timer = 3
 const MAX_BOMB_TIME = 3
 var bombs = []
 
+## 8 bombs - one every 3 sec - removed after 24 sec
+
 var paused = false
 
 # Called when the node enters the scene tree for the first time.
@@ -67,7 +69,6 @@ func _process(delta):
 			_restart_game(hunger_script)
 
 func _on_remove_bomb(bomb):
-	print("removing bomb")
 	bomb_count -= 1
 	bombs.erase(bomb)
 
@@ -75,6 +76,7 @@ func _remove_bombs():
 	for bomb in bombs:
 		remove_child(bomb)
 	bombs = []
+	bomb_count = 0
 
 func _start_game(script):
 	timer = 0.0
@@ -158,6 +160,7 @@ func _on_touched_bomb(touched_bomb):
 	_drop_active_meter()
 	remove_child(touched_bomb)
 	bomb_count -= 1
+	bombs.erase(touched_bomb)
 	var bomb_x = touched_bomb.position.x
 	var player_x = current_player.position.x
 	
