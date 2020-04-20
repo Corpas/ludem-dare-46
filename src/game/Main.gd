@@ -11,6 +11,7 @@ onready var level_scene = load("res://src/game/levels/Level.tscn")
 onready var hunger_script = load("res://src/game/levels/hunger/Hunger.gd")
 onready var sleep_script = load("res://src/game/levels/sleep/Sleep.gd")
 onready var stopped_script = load("res://src/game/levels/game-over/GameStopped.gd")
+onready var explosion_scene = load("res://src/game/effects/Explosion.tscn")
 onready var random = RandomNumberGenerator.new()
 onready var screen_size = get_viewport().get_visible_rect().size
 onready var bomb_scene = load("res://src/drops/enemy/Bomb.tscn")
@@ -29,19 +30,26 @@ const MAX_BOMBS = 8
 var bomb_timer = 3
 const MAX_BOMB_TIME = 3
 var bombs = []
-
-## 8 bombs - one every 3 sec - removed after 24 sec
+var explosions = []
 
 var paused = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	_start_game(stopped_script)
-	paused = true
+	_start_game(hunger_script)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if !paused:
+		var to_be_removed = []
+		for explosion in explosions:
+			if !explosion.is_animation_playing():
+				to_be_removed.push_back(explosion)
+				remove_child(explosion)
+		
+		for tbr in to_be_removed:
+			explosions.erase(tbr)
+		
 		timer += delta
 		
 		bomb_timer += delta
@@ -66,17 +74,31 @@ func _process(delta):
 	else:
 		if Input.is_action_pressed("ui_accept"):
 			_remove_bombs()
+			_remove_explosions()
 			_restart_game(hunger_script)
 
 func _on_remove_bomb(bomb):
 	bomb_count -= 1
 	bombs.erase(bomb)
+	_do_explosion(bomb.position)
+
+func _do_explosion(bomb_position):
+	var explosion = explosion_scene.instance()
+	explosions.push_back(explosion)
+	explosion.position = bomb_position
+	add_child(explosion)
+	explosion.play_animation()
+	explosion.play_audio()
 
 func _remove_bombs():
 	for bomb in bombs:
 		remove_child(bomb)
 	bombs = []
 	bomb_count = 0
+
+func _remove_explosions():
+	for explosion in explosions:
+		remove_child(explosion)
 
 func _start_game(script):
 	timer = 0.0
@@ -161,15 +183,7 @@ func _on_touched_bomb(touched_bomb):
 	remove_child(touched_bomb)
 	bomb_count -= 1
 	bombs.erase(touched_bomb)
-	var bomb_x = touched_bomb.position.x
-	var player_x = current_player.position.x
-	
-	var blow_back_direction = bomb_x - player_x
-	
-	if blow_back_direction < 0:
-		current_player.move_and_slide(Vector2(3000, -3000), Vector2(0, -1))
-	else:
-		current_player.move_and_slide(Vector2(-3000, -3000), Vector2(0, -1))
+	_do_explosion(touched_bomb.position)
 
 func _drop_inactive_meters():
 	if current_script == "hunger":
