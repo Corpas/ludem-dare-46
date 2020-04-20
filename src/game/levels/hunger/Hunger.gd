@@ -12,6 +12,9 @@ onready var screen_size = get_viewport().get_visible_rect().size
 onready var hunger_meter = $Overlay/Control/HungerMeter
 onready var player = $Player
 onready var player_face = $AnimatedPlayer/Sprite
+onready var collect_player = $CollectPlayer
+onready var argh_player = $ArghPlayer
+
 var food
 var init = true
 
@@ -49,10 +52,12 @@ func _process(delta):
 
 func _on_caught_food():
 	init = false
+	collect_player.play()
 	player_face._set_happy_face()
 	hunger_meter.set_value(hunger_meter.get_value() + 10)
 
 func _on_missed_food():
 	init = false
+	argh_player.play()
 	player_face._set_angry_face()
 	hunger_meter.set_value(hunger_meter.get_value() - 10)
