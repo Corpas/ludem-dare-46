@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/explosion-spite-sheet.png-e3af48c056615ac72a41cf81350658fd.stex"
+path="res://.import/explosion-spite-sheet.png-8d657d373525abe55825c45c74fceef5.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sfx/explosion-spite-sheet.png"
-dest_files=[ "res://.import/explosion-spite-sheet.png-e3af48c056615ac72a41cf81350658fd.stex" ]
+source_file="res://assets/explosion-spite-sheet.png"
+dest_files=[ "res://.import/explosion-spite-sheet.png-8d657d373525abe55825c45c74fceef5.stex" ]
 
 [params]
 
