@@ -83,8 +83,8 @@ func _start_game(script):
 	paused = false
 	current_level = level_scene.instance()
 	current_level.set_script(script)
-	current_level.connect("level_end", self, "_load_next_level")
 	add_child(current_level)
+	current_level.connect("level_end", self, "_load_next_level")
 	hunger_meter = get_node("Level/Overlay/Control/HungerMeter")
 	sleep_meter = get_node("Level/Overlay/Control/SleepMeter")
 	current_player = get_node("Level/Player")
@@ -177,7 +177,7 @@ func _drop_inactive_meters():
 		sleep_meter.set_value(current_sleep_value - 10)
 	elif current_script == "sleep":
 		var current_hunger_value = hunger_meter.get_value()
-		hunger_meter.set_value(hunger_meter.get_value() - 10)
+		hunger_meter.set_value(current_hunger_value - 10)
 
 func _drop_active_meter():
 	if current_script == "sleep":
@@ -185,4 +185,4 @@ func _drop_active_meter():
 		sleep_meter.set_value(current_sleep_value - 10)
 	elif current_script == "hunger":
 		var current_hunger_value = hunger_meter.get_value()
-		hunger_meter.set_value(hunger_meter.get_value() - 10)
+		hunger_meter.set_value(current_hunger_value - 10)
