@@ -1,5 +1,7 @@
 extends RigidBody2D
 
+onready var impact_player = $ImpactPlayer
+
 const GRAVITY = 2.0
 var velocity = Vector2()
 var bomb_timer = 0.0
@@ -25,3 +27,5 @@ func _physics_process(delta):
 func _on_Area2D_body_entered(body):
 	if body.get_name() == "Player":
 		emit_signal("touched_bomb", self)
+	elif body.get_name() == "TileMap":
+		impact_player.play()
