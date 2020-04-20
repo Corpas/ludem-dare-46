@@ -10,6 +10,8 @@ onready var screen_size = get_viewport().get_visible_rect().size
 onready var sleep_meter = $Overlay/Control/SleepMeter
 onready var random = RandomNumberGenerator.new()
 onready var player = $Player
+onready var collect_player = $CollectPlayer
+onready var argh_player = $ArghPlayer
 
 var init = true
 
@@ -21,7 +23,7 @@ func _ready():
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	var bed
 	
 	var sleep_value = sleep_meter.get_value()
@@ -38,8 +40,10 @@ func _process(delta):
 		
 func _on_caught_bed():
 	init = false
+	collect_player.play()
 	sleep_meter.set_value(sleep_meter.get_value() + 10)
 
 func _on_missed_bed():
 	init = false
+	argh_player.play()
 	sleep_meter.set_value(sleep_meter.get_value() - 10)
