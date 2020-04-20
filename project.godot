@@ -15,7 +15,7 @@ _global_script_class_icons={
 
 [application]
 
-config/name="46"
+config/name="Catch For Your Life"
 run/main_scene="res://src/game/TitleScreen.tscn"
 config/icon="res://assets/icon.png"
 
