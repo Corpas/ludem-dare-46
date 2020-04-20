@@ -14,6 +14,7 @@ onready var stopped_script = load("res://src/game/levels/game-over/GameStopped.g
 onready var random = RandomNumberGenerator.new()
 onready var screen_size = get_viewport().get_visible_rect().size
 onready var bomb_scene = load("res://src/drops/enemy/Bomb.tscn")
+onready var audioplayer = $AudioStreamPlayer2D
 
 var hunger_meter
 var sleep_meter
@@ -36,8 +37,7 @@ var paused = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	_start_game(stopped_script)
-	paused = true
+	_start_game(hunger_script)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -71,6 +71,7 @@ func _process(delta):
 func _on_remove_bomb(bomb):
 	bomb_count -= 1
 	bombs.erase(bomb)
+	audioplayer.play()
 
 func _remove_bombs():
 	for bomb in bombs:
@@ -157,19 +158,11 @@ func _configure_new_level(new_level):
 	current_player.velocity.y = current_player_velocity.y
 
 func _on_touched_bomb(touched_bomb):
+	audioplayer.play()
 	_drop_active_meter()
 	remove_child(touched_bomb)
 	bomb_count -= 1
 	bombs.erase(touched_bomb)
-	var bomb_x = touched_bomb.position.x
-	var player_x = current_player.position.x
-	
-	var blow_back_direction = bomb_x - player_x
-	
-	if blow_back_direction < 0:
-		current_player.move_and_slide(Vector2(3000, -3000), Vector2(0, -1))
-	else:
-		current_player.move_and_slide(Vector2(-3000, -3000), Vector2(0, -1))
 
 func _drop_inactive_meters():
 	if current_script == "hunger":
