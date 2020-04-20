@@ -16,7 +16,7 @@ _global_script_class_icons={
 [application]
 
 config/name="46"
-run/main_scene="res://src/game/Main.tscn"
+run/main_scene="res://src/game/TitleScreen.tscn"
 config/icon="res://assets/icon.png"
 
 [display]
@@ -42,4 +42,5 @@ run_modify={
 quality/driver/driver_name="GLES2"
 vram_compression/import_etc=true
 vram_compression/import_etc2=false
+environment/default_clear_color=Color( 0.14902, 0.192157, 0.219608, 1 )
 environment/default_environment="res://default_env.tres"
